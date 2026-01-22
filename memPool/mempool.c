@@ -429,8 +429,17 @@ unsigned long mempool_writeToIndex(const void *const pMem, const void *const pMe
                 {
                     // New sector allocation needed
                     p_next = mempool_alloc(pMem);
-                    *((unsigned long *)(((char *)p_mem) + MEM_POOL_OFFSET(t_MemSect, Flags))) |= MEMSECT_FLAGS_CONCAT;
-                    *((unsigned long *)(((char *)p_mem) + MEM_POOL_OFFSET(t_MemSect, pConcat))) = (unsigned long)p_next;
+                    if(p_next != NULL)
+                    {
+                        // Memory Pool Allocation successful
+                        *((unsigned long *)(((char *)p_mem) + MEM_POOL_OFFSET(t_MemSect, Flags))) |= MEMSECT_FLAGS_CONCAT;
+                        *((unsigned long *)(((char *)p_mem) + MEM_POOL_OFFSET(t_MemSect, pConcat))) = (unsigned long)p_next;
+                    }
+                    else
+                    {
+                        // Memory all consumed
+                        break;
+                    }
                 }
                 else
                 {
